@@ -217,6 +217,29 @@ Contributions are welcome! Please follow these steps:
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🙏 Acknowledgments
+-
+## 🔒 Security & Safety Notes
+
+
+This project is designed for enterprise environments and follows best practices for credential management and data privacy. However, users should be aware of the following:
+
+- **Read-Only Database Access:** The LLM agent operates using a read-only database account and cannot modify, insert, or delete data. This minimizes risk and ensures data integrity.
+- **API Keys & Secrets:** Never commit your `.env` file or any secrets to version control. Use environment variables and secret managers in production.
+- **Data Privacy:** Ensure that sensitive business data is not exposed to external LLMs or third-party services unless explicitly permitted.
+- **LLM Risks:** Generated answers may contain inaccuracies or hallucinations. Always validate critical outputs before acting on them.
+- **Logging:** Logs may contain sensitive queries or results. Secure log files and rotate them regularly.
+
+## 🚧 Weaknesses & Future Improvements
+
+While Enterprise AI Copilot is production-ready, there are areas for future enhancement:
+
+- **Fine-Grained Query Auditing:** Add more granular logging and monitoring for compliance and security.
+- **Advanced Access Control:** Integrate with enterprise IAM solutions for user-level permissions.
+- **Explainability:** Improve transparency of agent decisions and query routing.
+- **UI Enhancements:** Add more visualization and admin controls to the Streamlit UI.
+- **Testing & CI:** Expand test coverage and automate with GitHub Actions.
+- **Scalability:** Optimize for distributed deployments and larger datasets.
+
 
 - Built with [LangChain](https://python.langchain.com/)
 - Powered by [Azure OpenAI](https://azure.microsoft.com/en-us/products/ai-services/openai-service)
