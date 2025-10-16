@@ -12,16 +12,17 @@
 Enterprise AI Copilot is a production-ready intelligent assistant that leverages Large Language Models (LLMs) to answer business questions by:
 
 - **SQL Agent**: Translates natural language to SQL queries for structured data
-- **RAG Agent**: Retrieves and synthesizes information from document knowledge bases
-- **Hybrid Agent**: Intelligently routes queries or combines both approaches for comprehensive answers
+- **RAG Agent**: Retrieves information from document knowledge bases
+- **Hybrid Agent**: Combines SQL and RAG results and synthesizes a comprehensive answer using LLM-powered synthesis logic
 
 ### Key Features
 
-✨ **Intelligent Query Classification** - Automatically determines whether to use SQL, RAG, or both  
-🔒 **Enterprise Security** - Azure OpenAI integration with secure credential management  
-📊 **Comprehensive Logging** - Full execution traces with timing and source attribution  
-🐳 **Production-Ready** - Dockerized deployment with PostgreSQL backend  
+✨ **Intelligent Query Classification** - Automatically determines whether to use SQL, RAG, or both
+🔒 **Enterprise Security** - Azure OpenAI integration with secure credential management
+📊 **Comprehensive Logging** - Full execution traces with timing and source attribution
+🐳 **Production-Ready** - Dockerized deployment with PostgreSQL backend
 🎯 **Modular Architecture** - Clean separation of concerns for easy maintenance and testing
+🧠 **LLM-Powered Synthesis** - Hybrid agent synthesizes answers from both SQL and RAG sources for richer responses
 
 ## 🏗️ Architecture
 
@@ -29,28 +30,22 @@ Enterprise AI Copilot is a production-ready intelligent assistant that leverages
 ┌─────────────────────────────────────────────────┐
 │          User Query (Natural Language)          │
 └──────────────────┬──────────────────────────────┘
-                   │
-        ┌──────────▼──────────┐
-        │  Query Classifier   │
-        │   (LLM-Powered)     │
-        └──────────┬──────────┘
-                   │
-     ┌─────────────┼─────────────┐
-     │             │             │
-┌────▼────┐  ┌────▼────┐  ┌─────▼─────┐
-│   SQL   │  │   RAG   │  │  Hybrid   │
-│  Agent  │  │  Agent  │  │   Agent   │
-└────┬────┘  └────┬────┘  └─────┬─────┘
-     │             │             │
-     │     ┌───────▼─────────┐   │
-     │     │   Synthesizer   │   │
-     │     └─────────────────┘   │
-     │                           │
-     └───────────┬───────────────┘
-                 │
-        ┌────────▼────────┐
-        │  Final Answer   │
-        └─────────────────┘
+          │
+     ┌──────────▼──────────┐
+     │  Query Classifier   │
+     │   (LLM-Powered)     │
+     └──────────┬──────────┘
+          │
+  ┌─────────────┼─────────────┐
+  │             │             │
+┌────▼────┐  ┌────▼────┐  ┌─────▼─────────────┐
+│   SQL   │  │   RAG   │  │  Hybrid Agent     │
+│  Agent  │  │  Agent  │  │  (Synthesizer)    │
+└─────────┘  └─────────┘  └─────────┬─────────┘
+               │
+           ┌─────────▼─────────┐
+           │   Final Answer    │
+           └───────────────────┘
 ```
 
 ## 🚀 Quick Start
