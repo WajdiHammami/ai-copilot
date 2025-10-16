@@ -1,0 +1,57 @@
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: copilot-postgres
+    restart: always
+    environment: 
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: copilot_secret
+      POSTGRES_DB: copilotdb
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+      - ./data/sql:/data/sql
+    ports:
+      - "5432:5432"
+
+
+  streamlit:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: copilot-api
+    restart: always
+    working_dir: /app
+    command: streamlit run src/api/streamlit_UI.py --server.port 8501 --server.address 0.0.0.0
+    ports:
+      - "8501:8501"
+    environment:
+
+      # Azure OpenAI for chat
+      - AZURE_OPENAI_ENDPOINT=${AZURE_OPENAI_ENDPOINT}
+      - AZURE_OPENAI_DEPLOYMENT_NAME=${AZURE_OPENAI_DEPLOYMENT_NAME}
+      - AZURE_OPENAI_API_VERSION=${AZURE_OPENAI_API_VERSION}
+      - AZURE_OPENAI_API_KEY=${AZURE_OPENAI_API_KEY}
+
+      # Azure OpenAI for embeddings (RAG)
+      - AZURE_OPENAI_ENDPOINT_EMBEDDINGS=${AZURE_OPENAI_ENDPOINT_EMBEDDINGS}
+      - AZURE_OPENAI_EMBEDDINGS_DEPLOYMENT_NAME=${AZURE_OPENAI_EMBEDDINGS_DEPLOYMENT_NAME}
+      - AZURE_OPENAI_API_VERSION_EMBEDDINGS=${AZURE_OPENAI_API_VERSION_EMBEDDINGS}
+      - AZURE_OPENAI_API_KEY_EMBEDDINGS=${AZURE_OPENAI_API_KEY_EMBEDDINGS}
+
+
+      # PostgreSQL connection 
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=copilotdb
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=copilot_secret
+
+      # Python path so imports work
+      - PYTHONPATH=/app
+    volumes:
+      - .:/app
+      - ./logs:/app/logs
+      - ./data/embeddings:/app/data/embeddings
+    depends_on:
+      - postgres

@@ -1,0 +1,15 @@
+dotenv
+psycopg2-binary
+Faker
+langchain
+openai
+tiktoken
+langchain-openai
+langchain-community
+pandas
+streamlit
+fastapi
+uvicorn
+tqdm
+pypdf
+faiss-cpu

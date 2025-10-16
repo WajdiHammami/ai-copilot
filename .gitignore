@@ -1,0 +1,64 @@
+.env
+data/
+docs/
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.env
+.venv/
+venv/
+ENV/
+
+# Logs
+data/query_logs.jsonl
+*.log
+
+logs/
+
+# Environment files
+.env
+
+# Jupyter Notebooks
+.ipynb_checkpoints
+
+# VS Code
+.vscode/
+
+# Docker
+*.pid
+
+# OS
+.DS_Store
+Thumbs.db
+
+# FAISS index
+/data/faiss_index
+
+# Misc
+*.sqlite3
+
+# Ignore compiled files
+*.so
+*.dll
+*.dylib
+
+# Ignore test coverage
+htmlcov/
+.coverage
+.coverage.*
+.cache
+
+# Ignore build
+build/
+dist/
+*.egg-info/
+
+# Ignore docs build
+/docs/_build/
+
+# Ignore recruiter checklist
+RECRUITER_READY_CHECKLIST.md
+
+# notebooks
+notebooks/
