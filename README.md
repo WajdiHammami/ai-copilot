@@ -48,6 +48,28 @@ Enterprise AI Copilot is a production-ready intelligent assistant that leverages
            └───────────────────┘
 ```
 
+## Design decisions
+
+### Query classification: LLM-based routing over a fixed classifier
+
+The query router uses an LLM call with a structured prompt rather than a trained classifier. A fine-tuned classifier would perform better on known query patterns but fails silently on out-of-distribution inputs — it has no way to express uncertainty. The LLM router degrades more gracefully: when the query is genuinely ambiguous, it defaults to the hybrid path, which returns a superset of what either agent alone would produce. The cost is an extra ~0.5s on every request; the benefit is near-zero catastrophic misroutes on novel inputs.
+
+### Hybrid agent: parallel retrieval with LLM synthesis
+
+When the router selects hybrid mode, SQL and RAG retrieval run sequentially and their outputs are passed together to a synthesis prompt. An earlier design ran them in parallel but produced inconsistent answers when SQL results contradicted document context — the model had no reliable way to arbitrate. Sequential execution lets the SQL result anchor the factual ground truth, with RAG adding qualitative context on top. Latency increases by ~40% vs. single-agent paths; answer coherence improves substantially on questions that span both data sources.
+
+### Vector store: FAISS over a managed service
+
+FAISS was chosen over Azure Cognitive Search or Pinecone to keep the stack self-contained and deployable without external service dependencies. At the document volumes this system targets (<100k chunks), FAISS flat-index search is fast enough that the operational overhead of a managed service isn't justified. The tradeoff is that FAISS requires the index to fit in memory and doesn't support incremental updates without a rebuild — both acceptable constraints for a single-tenant enterprise deployment.
+
+### Chunking strategy
+
+Documents are chunked at 512 tokens with a 64-token overlap. The overlap was chosen empirically: too little and multi-sentence answers that straddle chunk boundaries degrade; too much and retrieval precision drops as chunks become redundant. Tables and structured content are pre-processed separately and injected as SQL rows rather than embedded as text, since embedding tabular data produces poor retrieval recall compared to direct SQL lookup.
+
+### Observability: structured JSONL over metrics dashboards
+
+Every agent execution writes a structured JSONL record including route taken, retrieval latency, token counts, and the full answer. This was deliberately kept as flat files rather than a metrics service — it makes the logs trivially inspectable during development (`jq`-friendly) and avoids coupling the deployment to an external observability stack. A production deployment would pipe these records to a log aggregator.
+
 ## 🚀 Quick Start
 
 ### Prerequisites
